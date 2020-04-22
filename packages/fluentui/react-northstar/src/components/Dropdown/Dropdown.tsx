@@ -237,6 +237,9 @@ export interface DropdownProps extends UIComponentProps<DropdownProps, DropdownS
   /** Sets search query value (controlled mode). */
   searchQuery?: string;
 
+  /** only relevant for multiple - wheather or not to render the selected items */
+  hideSelectedItems?: boolean;
+
   /** Controls the appearance of the indicator that shows/hides the list of items. */
   toggleIndicator?: ShorthandValue<BoxProps>;
 
@@ -345,6 +348,7 @@ class Dropdown extends AutoControlledComponent<WithAsProp<DropdownProps>, Dropdo
     triggerButton: customPropTypes.itemShorthand,
     unstable_pinned: PropTypes.bool,
     value: PropTypes.oneOfType([customPropTypes.itemShorthand, customPropTypes.collectionShorthand]),
+    hideSelectedItems: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -371,6 +375,7 @@ class Dropdown extends AutoControlledComponent<WithAsProp<DropdownProps>, Dropdo
     position: 'below',
     toggleIndicator: {},
     triggerButton: {},
+    hideSelectedItems: false,
   };
 
   static autoControlledProps = ['activeSelectedIndex', 'highlightedIndex', 'open', 'searchQuery', 'value'];
@@ -456,6 +461,7 @@ class Dropdown extends AutoControlledComponent<WithAsProp<DropdownProps>, Dropdo
       getA11yStatusMessage,
       itemToString,
       toggleIndicator,
+      hideSelectedItems,
     } = this.props;
     const { highlightedIndex, open, searchQuery, value } = this.state;
 
@@ -502,7 +508,7 @@ class Dropdown extends AutoControlledComponent<WithAsProp<DropdownProps>, Dropdo
                     ref={this.selectedItemsRef}
                     className={cx(dropdownSlotClassNames.selectedItems, classes.selectedItems)}
                   >
-                    {multiple && this.renderSelectedItems(variables, rtl)}
+                    {multiple && !hideSelectedItems && this.renderSelectedItems(variables, rtl)}
                     {search
                       ? this.renderSearchInput(
                           accessibilityRootPropsRest,
